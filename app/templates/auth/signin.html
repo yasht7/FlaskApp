@@ -1,3 +1,4 @@
+
 {% macro render_field(field, placeholder=None) %}
 {% if field.errors %}
 <div>
@@ -46,5 +47,8 @@
       </div>
       <button type="submit" name="submit">Sign in</button>
     </form>
+    <a href="/auth/register_user">
+    <button type="submit" value="reg">Register</button>
+    </a>
   </div>
 </div>
