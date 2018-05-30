@@ -1,7 +1,7 @@
 from app import db
+from app.mod_auth.models import Base
 
 class Character(Base):
-    dec_base = declarative_base()
 
     name = db.Column(db.String(128), unique=True, nullable=False)
     weight = db.Column(db.Integer, nullable=False)
@@ -13,3 +13,7 @@ class Character(Base):
         self.weight = weight
         self.powers = powers
         self.speed = speed
+
+
+    def __repr__(self):
+        return self.name
