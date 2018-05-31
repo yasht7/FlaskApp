@@ -1,11 +1,16 @@
 # Import flask and template operators
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 
 # Define the WSGI application object
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    return redirect(url_for('smashbros.index'))
 
 # Configurations
 app.config.from_object('config')
