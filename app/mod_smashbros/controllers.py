@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for
-
+import sqlalchemy
 # Import password / encryption helper tools
 from werkzeug import check_password_hash, generate_password_hash
 
@@ -36,9 +36,8 @@ def character(id):
 # Adding new character
 @mod_smashbros.route('/add_character', methods=['GET', 'POST'])
 def add_smashbro():
-    # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     form = NewCharacterForm(request.form)
-
+    # try catch
     if request.method == "POST" and form.validate():
         # register smashbros
         name = form.name.data
@@ -47,9 +46,16 @@ def add_smashbro():
         speed = int(form.speed.data)
         character = Character(name, weight, powers, speed)
         db.session.add(character)
-        db.session.commit()
-        return redirect(url_for('smashbros.index'))
+        try:
+            db.session.commit()
+            return redirect(url_for('smashbros.index'))
+        except sqlalchemy.exc.IntegrityError as e:
+            flash("Character name already exists, could not add!")
+            return render_template("smashbros/add_character.html", form=form)
+        finally:
+            db.session.close()
     return render_template("smashbros/add_character.html", form=form)
+
 
 
 # Updating the character

@@ -9,7 +9,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     return redirect(url_for('smashbros.index'))
 
 # Configurations
