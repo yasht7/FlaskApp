@@ -17,12 +17,23 @@ from app.mod_smashbros.models import Character
 # define the blue Blueprint
 mod_smashbros = Blueprint('smashbros', __name__, url_prefix='/smashbros')
 
+
 @mod_smashbros.route('/')
 def index():
     # fectch all characters
+    # TODO: add limit on fetch
     characters=Character.query.all()
     return render_template('smashbros/index.html', characters=characters)
 
+
+# Character page
+@mod_smashbros.route('/character/<string:id>')
+def character(id):
+    character = Character.query.get(id)
+    return render_template('smashbros/character.html', character=character)
+
+
+# Adding new character
 @mod_smashbros.route('/add_character', methods=['GET', 'POST'])
 def add_smashbro():
     # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -39,3 +50,35 @@ def add_smashbro():
         db.session.commit()
         return redirect(url_for('smashbros.index'))
     return render_template("smashbros/add_character.html", form=form)
+
+
+# Updating the character
+@mod_smashbros.route('/update_character/<string:id>', methods=['GET', 'POST'])
+def update_character(id):
+    character = Character.query.get(id)
+
+    # populate fields with current data
+    form = NewCharacterForm(request.form)
+    form.name.data = character.name
+    form.weight.data = character.weight
+    form.powers.data = character.powers
+    form.speed.data = character.speed
+
+    if request.method == 'POST':
+        character.name = request.form['name']
+        character.weight = request.form['weight']
+        character.powers = request.form['powers']
+        character.speed = request.form['speed']
+        db.session.commit()
+        flash('Udpate Done!', 'success')
+        return redirect(url_for('smashbros.index'))
+    return render_template("smashbros/udpate_character.html", form=form)
+
+
+# Deleting the character
+@mod_smashbros.route('/delete_character/<string:id>', methods=['POST'])
+def delete_character(id):
+    character = Character.query.get(id)
+    db.session.delete(character)
+    db.session.commit()
+    return redirect(url_for('smashbros.index'))
