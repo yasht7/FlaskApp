@@ -1,53 +1,23 @@
+{% extends 'layout.html' %}
 
-{% macro render_field(field, placeholder=None) %}
-{% if field.errors %}
-<div>
-{% elif field.flags.error %}
-<div>
-{% else %}
-<div>
-{% endif %}
-    {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
-    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
-</div>
-{% endmacro %}
-
-<div>
-  <div>
-    <legend>Add a character</legend>
-    {% with errors = get_flashed_messages(category_filter=["error"]) %}
-    {% if errors %}
-    <div>
-    {% for error in errors %}
-    {{ error }}<br>
-    {% endfor %}
+{% block body %}
+  <h1>Add SmashBro Character</h1>
+  {% from 'includes/_formhelpers.html' import render_field %}
+  <form action="" method="post">
+    <div class="form-group">
+      {{render_field(form.name, class_="form-control")}}
     </div>
-    {% endif %}
-    {% endwith %}
-
-    {% if form.errors %}
-    <div>
-    {% for field, error in form.errors.items() %}
-    {% for e in error %}
-    {{ e }}<br>
-    {% endfor %}
-    {% endfor %}
+    <div class="form-group">
+      {{render_field(form.weight, class_="form-control")}}
     </div>
-    {% endif %}
-    <form method="POST" action="." accept-charset="UTF-8" role="form">
-      {{ form.csrf_token }}
-      {{ render_field(form.name, placeholder="Character Name",
-                      autofocus="") }}
-      {{ render_field(form.weight, placeholder="Your Email Address",
-                      autofocus="") }}
-      {{ render_field(form.weight, placeholder="Your Email Address",
-                      autofocus="") }}
-      {{ render_field(form.weight, placeholder="Your Email Address",
-                      autofocus="") }}
-      <div>
-      <a role="button" href="https://www.ssbwiki.com/Main_Page">SmashWiki</a><span class="clearfix"></span>
-      </div>
-      <button type="submit" name="submit">Smash!</button>
-    </form>
-  </div>
-</div>
+    <div class="form-group">
+      {{render_field(form.powers, class_="form-control")}}
+    </div>
+    <div class="form-group">
+      {{render_field(form.speed, class_="form-control")}}
+    </div>
+    <p>
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </p>
+  </form>
+{% endblock %}

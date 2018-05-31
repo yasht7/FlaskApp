@@ -18,15 +18,24 @@ from app.mod_smashbros.models import Character
 mod_smashbros = Blueprint('smashbros', __name__, url_prefix='/smashbros')
 
 @mod_smashbros.route('/')
-def show_main():
-    render_template('index.html')
+def index():
+    # fectch all characters
+    characters=Character.query.all()
+    return render_template('smashbros/index.html', characters=characters)
 
-@mod_smashbros.route('/add_character')
+@mod_smashbros.route('/add_character', methods=['GET', 'POST'])
 def add_smashbro():
+    # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     form = NewCharacterForm(request.form)
 
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate():
         # register smashbros
-        pass
-
-    return render_template("smashbros/index.html")
+        name = form.name.data
+        weight = int(form.weight.data)
+        powers = form.powers.data
+        speed = int(form.speed.data)
+        character = Character(name, weight, powers, speed)
+        db.session.add(character)
+        db.session.commit()
+        return redirect(url_for('smashbros.index'))
+    return render_template("smashbros/add_character.html", form=form)

@@ -1,17 +1,27 @@
-<div class="service-box">
-  <select class="character-select" name="smashbro">
-    list of all characters on dropdown
-  </select>
+{% extends 'layout.html' %}
 
-  <div class="character-data">
-    Name
-    weight
-    powers
-    speed
+{% block body %}
+  <div class="container">
+    <h1>SmashBros Characters</h1>
+    <a class="btn btn-primary" href="./add_character">Add bro</a>
+    <hr>
+    <table class="table table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Weight</th>
+        <th>Powers</th>
+        <th>Speed</th>
+        <th></th>
+      </tr>
+      {% for character in characters %}
+      <tr>
+        <td><a href="character/{{character.id}}">{{character.name}}</a></td>
+        <td>{{character.weight}}</td>
+        <td>{{character.powers}}</td>
+        <td>{{character.speed}}</td>
+        <td>delete?</td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
-
-  <a href="#">
-    <button type="button" name="newCharacter">Add Bro</button>
-  </a>
-
-</div>
+{% endblock %}
